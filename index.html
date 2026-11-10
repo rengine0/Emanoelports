@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Emanoel Videomaker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,500;0,700;1,700;1,800;1,900&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: dark stage, diagonal lime slashes borrowed from the badge, hero with a framed badge photo under a drone-HUD overlay. */
+:root {
+  --bg: #060706;
+  --surface: #0e100c;
+  --surface-2: #141711;
+  --line: rgba(190, 255, 120, .14);
+  --fg: #f4f6ef;
+  --muted: #98a08f;
+  --lime: #86dc2c;
+  --lime-deep: #4c9712;
+  --lime-glow: rgba(134, 220, 44, .28);
+  --silver: #c8ccc4;
+  --ink-on-lime: #0a1204;
+  --font-display: "Exo 2", "Arial Black", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); z-index: 50;
+}
+body::after { /* fine grain */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(134,220,44,.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 40%, rgba(134,220,44,.05), transparent 60%);
+}
+main, header, footer { position: relative; z-index: 1; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  width: 100%; max-width: 1160px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: rgba(6,7,6,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+.brand { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 20px; letter-spacing: .01em; text-decoration: none; white-space: nowrap; }
+.brand b { color: var(--lime); font-weight: 800; }
+.nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
+.nav ul a { text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .2s; }
+.nav ul a:hover { color: var(--fg); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 0 26px; border-radius: 4px; border: 1px solid transparent;
+  font: 700 14px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+  transform: skewX(-10deg); transition: transform .2s, box-shadow .2s, background .2s;
+}
+.btn > span { display: inline-block; transform: skewX(10deg); }
+.btn-primary { background: linear-gradient(180deg, #96ea36, var(--lime-deep)); color: var(--ink-on-lime); box-shadow: 0 8px 30px var(--lime-glow); }
+.btn-primary:hover { transform: skewX(-10deg) translateY(-2px); box-shadow: 0 12px 38px var(--lime-glow); }
+.btn-ghost { background: transparent; color: var(--fg); border-color: rgba(255,255,255,.22); }
+.btn-ghost:hover { border-color: var(--lime); color: var(--lime); }
+.btn-sm { min-height: 40px; padding: 0 18px; font-size: 12px; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; padding-block: 56px 72px; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 56px; align-items: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--lime); }
+.eyebrow::before { content: ""; width: 36px; height: 3px; background: var(--lime); transform: skewX(-30deg); }
+h1 {
+  font-family: var(--font-display); font-style: italic; font-weight: 900;
+  font-size: clamp(64px, 12.5vw, 148px); line-height: .92; letter-spacing: -.02em;
+  margin: 18px 0 22px; text-wrap: balance;
+}
+h1 .g { background: linear-gradient(180deg, #9cf03b, var(--lime-deep)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--silver); max-width: 34em; margin: 0 0 12px; }
+.role { font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 17px; color: var(--muted); margin: 0 0 32px; }
+.role b { color: var(--lime); font-weight: 700; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 14px 16px; }
+
+/* framed badge + HUD */
+.frame { position: relative; width: min(100%, 380px); margin-inline: auto; justify-self: center; }
+.frame .photo { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 40px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.03), 0 0 80px var(--lime-glow); transform: rotate(2.2deg); background: #000; }
+.frame img { display: block; width: 100%; height: auto; }
+.hud { position: absolute; inset: 14px; pointer-events: none; font: 600 11px/1.2 var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); text-shadow: 0 1px 6px rgba(0,0,0,.8); transform: rotate(2.2deg); }
+.hud .c { position: absolute; width: 26px; height: 26px; border: 2px solid var(--lime); }
+.hud .tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.hud .tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.hud .bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.hud .br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.hud .rec { position: absolute; top: 12px; left: 38px; display: flex; align-items: center; gap: 8px; }
+.hud .rec i { width: 9px; height: 9px; border-radius: 50%; background: #ff3b30; box-shadow: 0 0 10px #ff3b30; animation: blink 1.4s steps(2, jump-none) infinite; }
+.hud .tc { position: absolute; top: 12px; right: 38px; font-variant-numeric: tabular-nums; }
+.hud .loc { position: absolute; bottom: 12px; left: 38px; color: var(--lime); }
+.hud .alt { position: absolute; bottom: 12px; right: 38px; font-variant-numeric: tabular-nums; }
+@keyframes blink { 50% { opacity: .15; } }
+
+/* diagonal slashes */
+.slash { position: absolute; pointer-events: none; z-index: 0; }
+.slash i { position: absolute; display: block; height: 100%; width: 38px; background: linear-gradient(180deg, #9cf03b, var(--lime-deep)); transform: skewX(-30deg); opacity: .9; }
+.slash i:nth-child(2) { left: 56px; width: 14px; opacity: .55; }
+.slash i:nth-child(3) { left: 84px; width: 6px; opacity: .3; }
+.slash.hero-s { right: -40px; top: 0; height: 100%; width: 140px; opacity: .22; }
+
+/* ---------- Strip ---------- */
+.strip { border-block: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+.strip .row { display: flex; width: max-content; animation: slide 34s linear infinite; }
+.strip span { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 22px; letter-spacing: .04em; text-transform: uppercase; padding: 18px 34px; white-space: nowrap; color: var(--silver); }
+.strip span:nth-child(even) { color: var(--lime); }
+.strip span::after { content: "//"; margin-left: 68px; color: rgba(255,255,255,.18); }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ---------- Sections ---------- */
+section { padding-block: 96px; }
+.head { max-width: 40em; margin-bottom: 48px; }
+h2 { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(34px, 5vw, 56px); line-height: 1.02; letter-spacing: -.01em; margin: 14px 0 16px; text-wrap: balance; }
+h2 .g { color: var(--lime); }
+.head p { color: var(--muted); font-size: 17px; margin: 0; }
+
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.card {
+  position: relative; display: flex; flex-direction: column; gap: 14px; min-height: 260px;
+  padding: 28px 24px; background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color .25s, transform .25s;
+}
+.card::after { content: ""; position: absolute; right: -30px; bottom: -30px; width: 120px; height: 120px; background: linear-gradient(135deg, transparent 50%, var(--lime-glow) 50%); opacity: 0; transition: opacity .3s; }
+.card:hover { border-color: rgba(134,220,44,.55); transform: translateY(-4px); }
+.card:hover::after { opacity: 1; }
+.card .tag { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--lime); }
+.card h3 { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 30px; line-height: 1; margin: 0; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* split: ground + air */
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.panel { position: relative; padding: 40px 34px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+.panel.air { background: linear-gradient(135deg, #10170a, var(--surface) 60%); }
+.panel h3 { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(30px, 4vw, 44px); margin: 12px 0 14px; line-height: 1; }
+.panel h3 b { color: var(--lime); font-weight: 800; }
+.panel p { color: var(--muted); margin: 0 0 18px; max-width: 30em; }
+.panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.panel li { display: flex; gap: 12px; align-items: baseline; font-size: 15px; color: var(--silver); }
+.panel li::before { content: ""; flex: none; width: 14px; height: 3px; background: var(--lime); transform: skewX(-30deg) translateY(-3px); }
+
+/* facts */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; margin-top: 18px; }
+.fact { padding: 24px; display: grid; gap: 4px; border-right: 1px solid var(--line); }
+.fact:last-child { border-right: 0; }
+.fact small { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.fact strong { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.fact strong em { font-style: inherit; color: var(--lime); }
+
+/* ---------- Contact ---------- */
+.contact { position: relative; overflow: hidden; border-block: 1px solid var(--line); background: var(--surface); }
+.contact .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; position: relative; z-index: 1; }
+.slash.contact-s { left: -60px; bottom: 0; height: 70%; width: 140px; opacity: .14; }
+.lines { display: grid; gap: 12px; margin-top: 28px; }
+.line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.line div { min-width: 0; }
+.line small { display: block; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.line span { display: block; font-weight: 600; overflow-wrap: anywhere; user-select: all; }
+.copy { flex: none; min-height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--fg); font: 600 12px/1 var(--font-body); letter-spacing: .06em; cursor: pointer; transition: border-color .2s, color .2s; }
+.copy:hover { border-color: var(--lime); color: var(--lime); }
+.builder { padding: 30px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg); }
+.builder h3 { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 26px; margin: 0 0 6px; }
+.builder > p { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chips label { position: relative; cursor: pointer; }
+.chips input { position: absolute; opacity: 0; inset: 0; }
+.chips span { display: inline-block; padding: 9px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); font-size: 14px; font-weight: 600; color: var(--silver); transition: all .2s; }
+.chips input:checked + span { background: var(--lime); border-color: var(--lime); color: var(--ink-on-lime); }
+.chips input:focus-visible + span { outline: 2px solid var(--lime); outline-offset: 3px; }
+.field { display: grid; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.field input { width: 100%; min-height: 46px; padding: 0 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.16); background: var(--surface); color: var(--fg); font: 500 15px var(--font-body); }
+.field input::placeholder { color: #626a5b; }
+.field input:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 3px var(--lime-glow); }
+.builder .btn { width: 100%; margin-top: 8px; }
+
+/* ---------- Footer ---------- */
+footer { padding-block: 40px 56px; }
+footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; color: var(--muted); font-size: 14px; }
+footer .brand { color: var(--fg); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fact:nth-child(2) { border-right: 0; }
+  .fact:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 820px) {
+  .hero { padding-block: 36px 56px; }
+  .hero .wrap, .contact .wrap, .split { grid-template-columns: minmax(0, 1fr); }
+  .hero .wrap { gap: 44px; }
+  .contact .wrap { gap: 40px; }
+  .nav ul { display: none; }
+  section { padding-block: 64px; }
+  .frame { width: min(86%, 340px); }
+}
+@media (max-width: 520px) {
+  .grid4 { grid-template-columns: minmax(0, 1fr); }
+  .card { min-height: 0; }
+  .panel { padding: 30px 22px; }
+  .builder { padding: 22px 18px; }
+  .btn { width: 100%; }
+  .cta-row .btn { width: 100%; }
+  .nav .btn { width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .strip .row, .hud .rec i { animation: none; }
+  .card, .btn { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#topo">Ema<b>noel</b></a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#drone">Drone &amp; Câmera</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contato"><span>Orçamento</span></a>
+  </div>
+</header>
+
+<main id="topo">
+  <div class="hero">
+    <div class="slash hero-s" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Videomaker · Itumbiara, GO</span>
+        <h1>Ema<span class="g">noel</span></h1>
+        <p class="lead">Imagens de câmera e drone para shows, eventos, artistas e marcas. Conteúdo audiovisual com movimento, escala e cara de produção grande.</p>
+        <p class="role"><b>Função:</b> Gravação de Drone e Câmera &nbsp;·&nbsp; <b>Equipe:</b> Bye Emanoel</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://wa.me/556492137757" target="_blank" rel="noopener"><span>Chamar no WhatsApp</span></a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/emanoel_bye.vx" target="_blank" rel="noopener"><span>Ver no Instagram</span></a>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="photo"><img src="cracha.jpg" alt="Crachá da equipe Bye Emanoel: Emanoel usando óculos FPV, com um drone DJI acima" width="1024" height="1536"></div>
+        <div class="hud" aria-hidden="true">
+          <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+          <div class="rec"><i></i>REC</div>
+          <div class="tc" id="tc">00:00:00:00</div>
+          <div class="loc">Itumbiara · GO</div>
+          <div class="alt">ALT 120 M</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip" aria-hidden="true">
+    <div class="row" id="marquee"></div>
+  </div>
+
+  <section id="servicos">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Serviços</span>
+        <h2>Quatro frentes, <span class="g">um olhar</span>.</h2>
+        <p>Cada trabalho começa pelo que precisa ser sentido na tela. A câmera e o drone se ajustam a isso.</p>
+      </div>
+      <div class="grid4">
+        <article class="card">
+          <span class="tag">Palco e público</span>
+          <h3>Shows</h3>
+          <p>Captação do palco, da plateia e da energia da noite, com tomadas aéreas que mostram o tamanho do evento.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Cobertura completa</span>
+          <h3>Eventos</h3>
+          <p>Da chegada ao encerramento, com imagens prontas para divulgar o evento e atrair o público da próxima edição.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Imagem e presença</span>
+          <h3>Artistas</h3>
+          <p>Conteúdo para o perfil do artista: bastidores, performance e vídeos que reforçam a identidade.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Vídeo comercial</span>
+          <h3>Marcas</h3>
+          <p>Vídeos para empresas e produtos, com enquadramento cuidadoso e acabamento limpo.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="drone" style="padding-top:0">
+    <div class="wrap">
+      <div class="split">
+        <div class="panel">
+          <span class="eyebrow">No chão</span>
+          <h3>Câmera <b>em mãos</b></h3>
+          <p>Detalhe, rosto, reação. A câmera registra o que acontece perto e dá ritmo à edição.</p>
+          <ul>
+            <li>Planos de detalhe e retratos</li>
+            <li>Entrevistas e bastidores</li>
+            <li>Captação de performance</li>
+          </ul>
+        </div>
+        <div class="panel air">
+          <span class="eyebrow">No ar</span>
+          <h3>Drone <b>em voo</b></h3>
+          <p>Escala, localização e movimento. O drone abre o plano e mostra o lugar inteiro.</p>
+          <ul>
+            <li>Aberturas e transições aéreas</li>
+            <li>Visão geral de palco e público</li>
+            <li>Imagens de locais e fachadas</li>
+          </ul>
+        </div>
+      </div>
+      <div class="facts">
+        <div class="fact"><small>Base</small><strong>Itumbiara</strong></div>
+        <div class="fact"><small>Atendimento</small><strong><em>24h</em> no WhatsApp</strong></div>
+        <div class="fact"><small>Equipe</small><strong>Bye Emanoel</strong></div>
+        <div class="fact"><small>Instagram</small><strong>1.664 <em>seguidores</em></strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <div class="slash contact-s" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Contato</span>
+        <h2>Vamos gravar o seu <span class="g">próximo</span> projeto.</h2>
+        <p style="color:var(--muted);font-size:17px;margin:0;max-width:30em">Conte o tipo de trabalho, a data e a cidade. O Emanoel responde pelo WhatsApp.</p>
+        <div class="lines">
+          <div class="line"><div><small>WhatsApp</small><span>+55 64 9213-7757</span></div><button class="copy" type="button" data-copy="+55 64 9213-7757">Copiar</button></div>
+          <div class="line"><div><small>E-mail</small><span>emanoel.contats.shows@gmail.com</span></div><button class="copy" type="button" data-copy="emanoel.contats.shows@gmail.com">Copiar</button></div>
+          <div class="line"><div><small>Instagram</small><span>@emanoel_bye.vx</span></div><button class="copy" type="button" data-copy="@emanoel_bye.vx">Copiar</button></div>
+        </div>
+      </div>
+      <form class="builder" id="brief" autocomplete="off">
+        <h3>Monte sua mensagem</h3>
+        <p>Escolha as opções e abra a conversa já preenchida.</p>
+        <div class="chips" role="group" aria-label="Tipo de trabalho">
+          <label><input type="radio" name="tipo" value="show" checked><span>Show</span></label>
+          <label><input type="radio" name="tipo" value="evento"><span>Evento</span></label>
+          <label><input type="radio" name="tipo" value="artista"><span>Artista</span></label>
+          <label><input type="radio" name="tipo" value="marca"><span>Marca</span></label>
+        </div>
+        <div class="field"><label for="data">Data</label><input id="data" type="text" placeholder="Ex.: 12 de dezembro"></div>
+        <div class="field"><label for="cidade">Cidade</label><input id="cidade" type="text" placeholder="Ex.: Itumbiara"></div>
+        <a class="btn btn-primary" id="send" href="https://wa.me/556492137757" target="_blank" rel="noopener"><span>Abrir no WhatsApp</span></a>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#topo">Ema<b>noel</b></a>
+    <span>Videomaker · Câmera · Drone · Itumbiara, GO</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var words = ["Shows", "Eventos", "Artistas", "Marcas", "Câmera", "Drone", "Conteúdo audiovisual"];
+  var m = document.getElementById("marquee");
+  var html = words.map(function (w) { return "<span>" + w + "</span>"; }).join("");
+  m.innerHTML = html + html;
+
+  var tc = document.getElementById("tc");
+  var t0 = Date.now();
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function tick() {
+    var s = (Date.now() - t0) / 1000;
+    var f = Math.floor((s % 1) * 24);
+    tc.textContent = pad(Math.floor(s / 3600)) + ":" + pad(Math.floor(s / 60) % 60) + ":" + pad(Math.floor(s) % 60) + ":" + pad(f);
+  }
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(tick, 42);
+
+  var base = "https://wa.me/556492137757";
+  var send = document.getElementById("send");
+  var form = document.getElementById("brief");
+  function update() {
+    var tipo = form.querySelector("input[name=tipo]:checked").value;
+    var data = document.getElementById("data").value.trim();
+    var cidade = document.getElementById("cidade").value.trim();
+    var txt = "Olá, Emanoel! Quero um orçamento de vídeo para " + tipo;
+    if (data) txt += " no dia " + data;
+    if (cidade) txt += ", em " + cidade;
+    txt += ".";
+    send.href = base + "?text=" + encodeURIComponent(txt);
+  }
+  form.addEventListener("input", update);
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  update();
+
+  document.querySelectorAll(".copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var v = b.getAttribute("data-copy");
+      var ok = function () { b.textContent = "Copiado"; setTimeout(function () { b.textContent = "Copiar"; }, 1600); };
+      var fallback = function () {
+        var r = document.createRange(); r.selectNodeContents(b.previousElementSibling.querySelector("span"));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        b.textContent = "Selecionado"; setTimeout(function () { b.textContent = "Copiar"; }, 1600);
+      };
+      try { navigator.clipboard.writeText(v).then(ok, fallback); } catch (e) { fallback(); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
